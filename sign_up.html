@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>코캣 회원가입</title>
+<style>
+.wrapper{
+	width:600px;
+	margin:auto;
+}
+.wrapper input,textarea{
+	width:70%;
+	font-size:25px;
+}
+textarea{
+	height:300px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+ $(document).ready(function(){ 
+
+	//회원리스트 전체 보기
+	  $('#get').click(function(){
+		  $.ajax({
+						url: '/members',
+						type: 'get',
+						dataType: 'text',
+						success: function (data) {
+							$('#output').val(data);
+						}
+					}); 
+	  });
+
+    //회원 조회
+	$('#get_id').click(function(){  
+		$.ajax({
+                    url: '/members/'+$('#member_id').val(),
+                    type: 'get',
+                    dataType: 'text', 
+                    success: function (data) {
+                        $('#output').val(data);
+                    }
+                });
+  });
+
+  //회원가입
+  $('#post').click(function(){
+	 // alert("#post");
+     $.ajax({
+                    url: '/members',
+                    type: 'post',
+                    dataType: 'text',
+                    data: {
+                        member_id: $('#member_id').val(),
+                        password: $('#password').val(),
+						name: $('#name').val(),
+						email: $('#email').val(),
+						hp: $('#hp').val(),
+						sex: $('#sex').val(),
+						birth: $('#birth').val() 
+                    },
+                    success: function (data) {
+                        $('#output').val(data);
+                    }					
+                });
+  });
+
+  
+});
+</script>
+<script>  
+
+function test(){ 
+	var r = parseInt( Math.random( )*1000 + 1);
+	var tag = document.getElementById( "member_id" );
+	tag.value= "member_id" +r;
+	tag = document.getElementById( "password" );
+	tag.value= "password" +r;
+	tag = document.getElementById( "name" );
+	tag.value= "name" +r;
+	tag = document.getElementById( "email" );
+	tag.value= "email" +r;
+	tag = document.getElementById( "hp" );
+	tag.value= "hp" +r;
+	tag = document.getElementById( "sex" );
+	tag.value= "F";
+	tag = document.getElementById( "birth" );
+	tag.value= "birth" +r;
+
+	confirmMemberId(); 
+}
+
+function getFocus (){  
+	var tag = document.getElementById( "member_id" ); tag.style.backgroundColor = "yellow";  
+} 
+
+//신규등록 아이디 확인하기
+//중복체크 버튼을 하지 안고, ajax 를 이용하여 
+//사용자아이디의 정규식확인 후
+//db 단에서 신규아이디인지 바로 확인해서 보여주자
+function loseFocus (){ 
+	//null
+	//5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.
+	var tag = document.getElementById( "member_id" );
+	tag.style.backgroundColor = "pink";  
+
+	var tagVal = $('#member_id').val(); 
+	if(tagVal == "" || tagVal == null){
+		$('#output').val("아이디가 비었습니디.");
+	 }
+	else if(tagVal.length < 8){
+	  $('#output').val("아이디는 8자리 이상입니다.");
+	}
+	else {
+		// $('#output').val("확인중...");
+		confirmMemberId();
+	}
+}
+
+function confirmMemberId(){
+		$.ajax({
+                    url: '/members/'+$('#member_id').val(),
+                    type: 'get',
+                    dataType: 'text', 
+                    success: function (data) {
+						//$('#output').val(data);
+						if(data == "success"){
+							$('#output').val("가능한 아이디입니다.");
+
+							//tag.style.backgroundColor = "white"; 
+							//$('#output').val(data);
+						}
+						else{
+							$('#output').val("불가능한 아이디입니다.");
+							}
+                    }
+                }); 
+}
+
+</script>
+</head>
+<body> 
+
+	<div class="wrapper">
+
+	<h1>코캣 회원가입</h1>
+		 
+		    <div>
+				  <input type="text" id="member_id" placeholder="아이디" onfocus="getFocus()" onblur="loseFocus()" >
+				 
+			</div>
+			
+			<div>
+				   <input type="password" id="password" placeholder="비밀번호">
+			</div>
+			<div>
+				   <input type="password" id="password2" placeholder="비밀번호재확인">
+			</div>
+			<div>
+				   <input type="text" id="name" placeholder="이름">
+			</div> 
+			<div>
+				   <input type="text" id="email" placeholder="이메일">
+			</div>
+			<div>
+				  <input type="text" id="hp" placeholder="핸드폰">
+			</div>
+			 
+			<div> 
+			<input type="text" id="sex" placeholder="M/F">
+				  <!--input type="radio" name="sex" value="F"> 
+				  <input type="radio" name="sex" value="M"--> 
+			</div>
+			<div>
+			<input type="text" id="birth" placeholder="생년월일"> 
+				<!--input type="text" id="birth_year" placeholder="태어난해">
+				<input type="text" id="birth_month" placeholder="월">
+				<input type="text" id="birth_day" placeholder="일"-->
+			</div>
+			<div>
+				<textarea id="output" disabled="disabled" cols="40" rows="5"></textarea>
+				<button id="post">가입하기</button> 
+				<button id="test" onClick="test()">테스트</button>
+		</div> 
+	</div>
+</body>
+</html>

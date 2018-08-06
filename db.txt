@@ -1,0 +1,30 @@
+
+1. mysql 에서 iot 데이터베이스에 members 테이블 만들기
+
+create table members( 
+member_id varchar(50) not null primary key,
+password varchar(50) not null,
+name varchar(50) not null,
+email varchar(50) not null,
+hp varchar(20) not null,
+tel varchar(20),
+post varchar(10),
+addr varchar(100),
+sex varchar(1),
+birth varchar(50));
+
+
+//가입하기에서 - 새로운 아이디 입력시
+mysql> select * from members where member_id='33';
+Empty set (0.00 sec)
+
+/*
+DELETE FROM notice WHERE notice_id=555;
+없는 아이디 지워도 에러는 나지 안음 - affected row로 확인가능함
+
+mysql> DELETE FROM notice WHERE notice_id='500';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELETE FROM notice WHERE notice_id=3;
+Query OK, 1 row affected (0.06 sec)
+*/

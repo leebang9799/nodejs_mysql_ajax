@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>코캣 회원 정보수정</title>
+<style>
+.wrapper{
+	width:600px;
+	margin:auto;
+}
+.wrapper input,textarea{
+	width:70%;
+	font-size:25px;
+}
+textarea{
+	height:300px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+var isLogin = false;
+
+function getMemberInfo(){
+	//alert($('#member_id').val());
+	if(isLogin){
+		//alert($('#member_id').val());
+	 
+    //회원 조회
+	//$('#get').click(function(){ 
+		
+		$.ajax({
+                    url: '/members_info/'+$('#member_id').val(),
+                    type: 'get',
+                    dataType: 'json', 
+                    success: function (data) {
+						if(data.length == 1){
+							//$('#output').val(data[0].name);
+							var tag = document.getElementById( "name" );
+							tag.value= data[0].name;
+							 tag = document.getElementById( "email" );
+							tag.value= data[0].email;
+							 tag = document.getElementById( "hp" );
+							tag.value= data[0].hp;
+							 tag = document.getElementById( "sex" );
+							tag.value= data[0].sex;
+							 tag = document.getElementById( "birth" );
+							tag.value= data[0].birth; 
+							
+						}
+						else{
+							$('#output').val($('#member_id').val() + " 정보없슴");
+						}
+					
+                    }
+                }); 
+
+				}
+				else{
+					alert("isLogin 정보 없슴");
+					}
+ // }); 
+	}
+
+
+ $(document).ready(function(){ 
+ 
+
+  $('#put').click(function(){
+     $.ajax({
+                    url: '/members/'+$('#member_id').val(),
+                    type: 'put',
+                    dataType: 'text',
+                    data: {
+                        member_id: $('#member_id').val(),
+                        password: $('#password').val(),
+						name: $('#name').val(),
+						email: $('#email').val(),
+						hp: $('#hp').val(),
+						sex: $('#sex').val(),
+						birth: $('#birth').val() 
+                    },
+                    success: function (data) {
+						
+                        $('#output').val(data);
+						alert("수정되었습니다.");
+						//location.href = "cocat.html";  
+
+                    }
+                });
+  });
+  
+  $('#delete').click(function(){
+       $.ajax({
+                    url: '/members/'+$('#member_id').val(),
+                    type: 'delete',
+                    dataType: 'text',
+                    success: function (data) {
+						if(data == "success"){ 
+								alert("삭제되었습니다.");
+								$('#output').val(data);
+							}
+      
+	  					else{
+							$('#output').val(data);
+						//	location.href = "cocat.html";  
+
+						}
+                    }
+                });
+    
+  }); 
+}); 
+  
+	
+function test(){ 
+	var tag = document.getElementById( "member_id" );
+	tag.value= "member_id81"; 
+} 
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    var user = getCookie("username");
+	//alert(document.cookie);
+    if (user != "") {
+        //alert("Welcome again " + user);
+		isLogin = user;
+		 var tag = document.getElementById( "member_id" );
+		tag.value= user; 
+		 
+       
+    } else {
+		isLogin = false;
+		var tag = document.getElementById( "member_id" );
+		tag.value= ""; 
+    }
+}
+
+</script>
+</head>
+<body onLoad="checkCookie(); getMemberInfo();"> 
+
+	<div class="wrapper">
+
+	<h1>코캣  회원 정보수정</h1>
+		 
+		    <div>
+				  <input type="text" id="member_id" placeholder="아이디"  "  disabled="disabled"  >
+				 
+			</div>
+			<div>
+				   <input type="password" id="password" placeholder="비밀번호">
+			</div>
+			<div>
+				   <input type="password" id="password2" placeholder="비밀번호재확인">
+			</div>
+			<div>
+				   <input type="text" id="name" placeholder="이름">
+			</div> 
+			<div>
+				   <input type="text" id="email" placeholder="이메일">
+			</div>
+			<div>
+				  <input type="text" id="hp" placeholder="핸드폰">
+			</div>
+			 
+			<div> 
+			<input type="text" id="sex" placeholder="M/F">
+				  <!--input type="radio" name="sex" value="F"> 
+				  <input type="radio" name="sex" value="M"--> 
+			</div>
+			<div>
+			<input type="text" id="birth" placeholder="생년월일">
+				
+				  <!--input type="text" id="birth_year" placeholder="태어난해">
+				<input type="text" id="birth_month" placeholder="월">
+				<input type="text" id="birth_day" placeholder="일"-->
+			</div>
+			<div>
+				<textarea id="output" disabled="disabled" cols="40" rows="5"></textarea>
+				<button id="put">수정하기</button> 
+				<button id="delete">삭제하기</button> 
+
+		</div> 
+	</div>
+</body>
+</html>

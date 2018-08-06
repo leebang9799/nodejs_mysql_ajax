@@ -23,7 +23,7 @@ birth varchar(50));
 6. 테스트 해보기
 회원가입 : sign_in.html
 로그인 : sign_up.html
-정보수정 : sign_up.html
+정보수정 : sign_update.html
 회원삭제 : sign_update.html
 
 

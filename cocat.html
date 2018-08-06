@@ -1,0 +1,103 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+
+
+<meta charset="UTF-8">
+<title>코캣</title>
+<style>
+.wrapper{
+	width:600px;
+	margin:auto;
+}
+.wrapper input,textarea{
+	width:70%;
+	font-size:25px;
+}
+textarea{
+	height:300px;
+}
+ 
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>  
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    var user = getCookie("username");
+	//alert(document.cookie);
+    if (user != "") {
+        //alert("Welcome again " + user);
+		isLogin = user;
+		 
+		document.getElementById("log_inout").style.display = "block";
+		document.getElementById("sign_inup").style.display = "none";
+		document.getElementById("login_user").innerHTML = user;
+       
+    } else {
+		isLogin = false;
+
+		 document.getElementById("login_user").innerHTML = "";
+		document.getElementById("log_inout").style.display = "none";
+		document.getElementById("sign_inup").style.display = "block";
+        //user = prompt("Please enter your name:", "");
+       // if (user != "" && user != null) {
+        //    setCookie("username", user, 365);
+       // }
+    }
+}
+
+function logOut(){
+	//document.cookie = "";
+	setCookie("username", "", 30);
+	location.reload();
+}
+
+var isLogin = false; 
+ 
+</script> 
+</head>
+<body onLoad="checkCookie()">
+ 		
+	<div class="wrapper"> 
+
+		<!-- 로그인한 사용자 정보 : 정보수정, 로그아웃 -->
+		<div id="log_inout">	
+			<a href="sign_update.html" id="login_user"></a> 
+			<a id="logout"  onClick="logOut()">로그out</a> 
+		</div>
+		 <!-- 기존회원 로그인 및 신규가입화면 이동 -->
+		 <div id="sign_inup"> 
+			   <a href="sign_in.html">로그인</a> 
+			   <a href="sign_up.html">회원가입</a> 
+		  </div> 
+
+		<h1>코캣 </h1>
+		<h2>코딩하는 고양여성 전문가들의 모임</h2>
+		<div>사물인터넷 전문가</div>
+		<div>프로그래밍 전문</div>
+		<div>아두이노 키트 전문</div> 
+	</div> 
+</body>
+</html>
